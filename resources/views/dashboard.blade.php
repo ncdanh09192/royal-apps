@@ -11,6 +11,12 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     {{ __("You're logged in!") }}
                 </div>
+
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                @foreach ($authors->items as $author)
+                    <p>This is user {{ $author->first_name }}</p>
+                @endforeach
+                </div>
             </div>
         </div>
     </div>

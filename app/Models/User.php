@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use GuzzleHttp\Client;
 
 class User extends Authenticatable
 {
@@ -41,4 +42,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getAuthors(){
+        $result = [];
+        try {
+            $client = new Client();
+            $response = $client->get('https://symfony-skeleton.q-tests.com/api/v2/authors', [
+                'headers' => [ 'Authorization' => 'Bearer ' . $this->sym_token ],
+              ]);
+            if(!empty($response)){
+                $result = json_decode($response->getBody());
+            }
+        } catch (\Exception $e) {
+            \Log::error($e->getMessage());
+        }
+
+        return $result;
+    }
 }
