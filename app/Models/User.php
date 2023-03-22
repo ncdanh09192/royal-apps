@@ -47,9 +47,9 @@ class User extends Authenticatable
         $result = [];
         try {
             $client = new Client();
-            $response = $client->get('https://symfony-skeleton.q-tests.com/api/v2/authors', [
+            $response = $client->get(config('core.SYM_SKL_APU_URL').'/authors', [
                 'headers' => [ 'Authorization' => 'Bearer ' . $this->sym_token ],
-              ]);
+            ]);
             if(!empty($response)){
                 $result = json_decode($response->getBody());
             }
