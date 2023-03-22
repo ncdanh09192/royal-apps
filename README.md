@@ -18,5 +18,6 @@ After installing Docker, please follow these steps:
    - `./vendor/bin/sail run dev` to compile front-end assets.
    
 After running these commands, you should be able to access the Laravel demo by visiting http://localhost in your web browser.
+Please register a account by email and login to try the project
 
 Please note that this demo is for educational purposes only and should not be used in production environments.
