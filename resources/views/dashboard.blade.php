@@ -12,7 +12,7 @@
                     {{ __("You're logged in!") }}
                 </div>
                 @if(session()->has('delete_message'))
-                    <div class="alert alert-success">
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
                         {{ session()->get('delete_message') }}
                     </div>
                 @endif
@@ -39,14 +39,16 @@
                                     <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">{{ $author->gender }}</td>
                                     <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">{{ $author->place_of_birth }}</td>
                                     <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                        <form method="POST" action="/authors/{{$author->id}}">
-                                            {{ csrf_field() }}
-                                            {{ method_field('DELETE') }}
+                                        @if(empty($author->books))
+                                            <form method="POST" action="/authors/{{$author->id}}">
+                                                {{ csrf_field() }}
+                                                {{ method_field('DELETE') }}
 
-                                            <div class="form-group">
-                                                <input type="submit" class="bg-transparent hover:bg-red-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onclick="deleteAuthor(e, this)" value="Delete">
-                                            </div>
-                                        </form>
+                                                <div class="form-group">
+                                                    <input type="submit" class="bg-transparent hover:bg-red-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onclick="deleteAuthor(e, this)" value="Delete">
+                                                </div>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

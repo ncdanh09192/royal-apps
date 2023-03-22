@@ -70,7 +70,7 @@
                                 <tbody class="bg-white dark:bg-slate-800">
                                     @foreach ($author->books as $book)
                                         <tr>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400"><a href="/books/{{ $book->id }}"><u>{{ $book->id }}</u></a></td>
+                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{{ $book->id }}</td>
                                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">{{ $book->title }}</td>
                                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">{{ $book->release_date }}</td>
                                             <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">{{ $book->isbn }}</td>

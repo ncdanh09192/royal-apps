@@ -5,22 +5,23 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Http\Requests\CreateBookRequest;
-use App\Services\AuthorService;
+use App\Services\BookService;
 
 class BookController extends Controller
 {
     private $sourceName = 'books';
     /**
-     * @var AuthorService
+     * @var BookService
      */
-    private $authorService;
+    private $bookService;
+
+    public function __construct(BookService $bookService) {
+        $this->bookService = $bookService;
+    }
 
     public function delete($bookId, Request $request){
         try {
-            $client = new Client();
-            $response = $client->delete(config('core.SYM_SKL_APU_URL').'/'.$this->sourceName.'/'.$bookId,[
-                'headers' => [ 'Authorization' => 'Bearer ' . $request->user()->sym_token ],
-            ]);
+            $response = $this->bookService->delete($bookId, $request->user()->sym_token);
             if(!empty($response)){
                 return redirect()->back()->with('delete_message', 'Delete successfully');
             }
@@ -30,45 +31,22 @@ class BookController extends Controller
         return redirect()->back()->with('delete_message', 'Delete fail! - try again later');
     }
 
-    public function detail($bookId, Request $request){
-        $book = [];
-        try {
-            $client = new Client();
-            $response = $client->get(config('core.SYM_SKL_APU_URL').'/'.$this->sourceName.'/'.$bookId, [
-                'headers' => [ 'Authorization' => 'Bearer ' . $request->user()->sym_token ],
-            ]);
-            if(!empty($response)){
-                $book = json_decode($response->getBody());
-            }
-        } catch (\Exception $e) {
-            \Log::error($e->getMessage());
-        }
-
-        return view('book.detail',["book" => $book]);
-    }
-
     public function add(Request $request){
         $authors = $request->user()->getAuthors();
         return view('book.add',["authors" => $authors]);
     }
 
     public function create(CreateBookRequest $request){
-        $book = [];
         try {
-            $client = new Client();
-            $response = $client->post(config('core.SYM_SKL_APU_URL').'/'.$this->sourceName, [
-                'headers' => [ 'Authorization' => 'Bearer ' . $request->user()->sym_token ],
-                'json' => [
-                    "author" => [ "id" => $request->author_id ],
-                    "title" => $request->title,
-                    "release_date" => $request->release_date,
-                    "description" => $request->description,
-                    "isbn" => $request->isbn,
-                    "format" => $request->format,
-                    "number_of_pages" => (int)$request->number_of_pages
-                ]
-            ]);
-            \Log::info(json_encode($response));
+            $response = $this->bookService->create([
+                "author_id" => $request->author_id,
+                "title" => $request->title,
+                "release_date" => $request->release_date,
+                "description" => $request->description,
+                "isbn" => $request->isbn,
+                "format" => $request->format,
+                "number_of_pages" => (int)$request->number_of_pages
+            ], $request->user()->sym_token);
             if(!empty($response)){
                 return redirect()->back()->with('create_msg', 'Created');
             }
